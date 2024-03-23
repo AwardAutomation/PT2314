@@ -54,6 +54,9 @@ unsigned char PT2314::eq_table[] = {
 
 int PT2314::volume_to_pt2314(int vol)
 {
+	// volume is controlled by sending an audio byte with 00 in the 2 most significant bits
+	// and the volume level in the 6 least significant bits
+	// 0b00111111 = 63 (decimal) is the minimum volume:  -78.75dB
 	return 63 - ((vol * 63) / 100);
 }
 
@@ -156,8 +159,8 @@ bool PT2314::treble(int t)
 
 bool PT2314::updateVolume()
 {
-	unsigned int val = volume_to_pt2314(_volume);
-	return (writeI2CChar(val) == 0) ? true : false;
+	volume_pt2314 = volume_to_pt2314(_volume);
+	return (writeI2CChar(volume_pt2314) == 0) ? true : false;
 }
 
 bool PT2314::updateAttenuation()
@@ -196,7 +199,7 @@ bool PT2314::gain(int v)
 	v = constrain(v, 0, 3);
 	// gain byte, 0b00011000 = no gain, 0b00010000 = +3.75dB, 0b00001000 = +7.5dB, 0b00000000 = +11.25dB
 	_gain = ((3 - v) << 3);
-	updateAudioSwitch();
+	return updateAudioSwitch();
 }
 
 bool PT2314::updateAudioSwitch()
@@ -262,6 +265,17 @@ int PT2314::getChannel()
 int PT2314::getVolume()
 {
 	return _volume;
+}
+
+int PT2314::getVolumedB()
+{
+	float aSteps[] = { 0, -1.25, -2.5, -3.75, -5, -6.25, -7.5, -8.75 }; // A values in 1.25 dB steps 
+	float bSteps[] = { 0, -10, -20, -30, -40, -50, -60, -70 }; // B values in 10 dB steps
+	int A = volume_pt2314 & 0b00000111; // mask the 3 lsb of volume_pt2314
+	int B = (volume_pt2314 & 0b00111000) >> 3; // mask the 3 msb of volume_pt2314 and shift 3 bits to the right
+	float vol_dB = aSteps[A] + bSteps[B];
+	log_d("Volume: %d, A: %d, B: %d, dB: %.2f", volume_pt2314, A, B, vol_dB);
+	return vol_dB;
 }
 
 int PT2314::getBass()
