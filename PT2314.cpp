@@ -131,12 +131,14 @@ bool PT2314::channel(int ch, bool one_based)
 bool PT2314::loudnessOn(void)
 {
 	_loudness = true;
+	log_d("Loudness on");
 	return updateAudioSwitch();
 }
 
 bool PT2314::loudnessOff(void)
 {
 	_loudness = false;
+	log_d("Loudness off");
 	return updateAudioSwitch();
 }
 
@@ -309,4 +311,9 @@ float PT2314::getGain()
 	// gain byte, 0b00011000 = no gain, 0b00010000 = +3.75dB, 0b00001000 = +7.5dB, 0b00000000 = +11.25dB
 	float gain_array_dB[] = {0, 3.75, 7.5, 11.25};
 	return gain_array_dB[_gain_index];
+}
+
+bool PT2314::getLoudness()
+{
+	return _loudness;
 }

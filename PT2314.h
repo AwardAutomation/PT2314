@@ -79,6 +79,7 @@ public:
 	int getAttenuationL();
 	int getAttenuationR();
 	float getGain();
+	bool getLoudness();
 };
 
 #endif
