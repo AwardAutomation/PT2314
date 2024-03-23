@@ -59,16 +59,16 @@ private:
 
 public:
 	bool init(void);
-	void muteOn(void);
-	void muteOff(void);
-	void volume(int v);
-	void channel(int ch);
-	void loudnessOn();
-	void loudnessOff();
-	void gain(int v);
-	void attenuation(int l, int r);
-	void bass(int b);
-	void treble(int t);
+	bool muteOn(void);
+	bool muteOff(void);
+	bool volume(int v);
+	bool channel(int ch);
+	bool loudnessOn();
+	bool loudnessOff();
+	bool gain(int v);
+	bool attenuation(int l, int r);
+	bool bass(int b);
+	bool treble(int t);
 };
 
 #endif

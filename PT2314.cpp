@@ -96,61 +96,61 @@ bool PT2314::init(void)
 	return updateAll();
 }
 
-void PT2314::volume(int v)
+bool PT2314::volume(int v)
 {
 	_volume = constrain(v, 0, 100);
-	updateVolume();
+	return updateVolume();
 }
 
-void PT2314::muteOn(void)
+bool PT2314::muteOn(void)
 {
 	_mute = true;
 	updateAttenuation();
-	updateVolume();
+	return updateVolume();
 }
 
-void PT2314::muteOff(void)
+bool PT2314::muteOff(void)
 {
 	_mute = false;
 	updateAttenuation();
-	updateVolume();
+	return updateVolume();
 }
 
-void PT2314::channel(int ch)
+bool PT2314::channel(int ch)
 {
 	_channel = constrain(ch, 0, 3);
-	updateAudioSwitch();
+	return updateAudioSwitch();
 }
 
-void PT2314::loudnessOn(void)
+bool PT2314::loudnessOn(void)
 {
 	_loudness = true;
-	updateAudioSwitch();
+	return updateAudioSwitch();
 }
 
-void PT2314::loudnessOff(void)
+bool PT2314::loudnessOff(void)
 {
 	_loudness = false;
-	updateAudioSwitch();
+	return updateAudioSwitch();
 }
 
-void PT2314::attenuation(int l, int r)
+bool PT2314::attenuation(int l, int r)
 {
 	_attenuationL = constrain(l, 0, 100);
 	_attenuationR = constrain(r, 0, 100);
-	updateAttenuation();
+	return updateAttenuation();
 }
 
-void PT2314::bass(int b)
+bool PT2314::bass(int b)
 {
 	_bass = constrain(b, 0, 100);
-	updateBass();
+	return updateBass();
 }
 
-void PT2314::treble(int t)
+bool PT2314::treble(int t)
 {
 	_treble = constrain(t, 0, 100);
-	updateTreble();
+	return updateTreble();
 }
 
 bool PT2314::updateVolume()
@@ -189,7 +189,7 @@ bool PT2314::updateAttenuation()
 	return true;
 }
 
-void PT2314::gain(int v)
+bool PT2314::gain(int v)
 {
 	// v=0 means no gain, 1=+3.75dB, 2=+7.5dB, 3=+11.25dB
 	v = constrain(v, 0, 3);
