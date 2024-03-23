@@ -118,7 +118,8 @@ bool PT2314::muteOff(void)
 
 bool PT2314::channel(int ch)
 {
-	_channel = constrain(ch, 0, 3);
+	int _ch = ch - 1; // internal channel number is zero based
+	_channel = constrain(_ch, 0, 3);
 	return updateAudioSwitch();
 }
 
@@ -253,30 +254,37 @@ bool PT2314::updateAll()
 	return updateTreble();
 }
 
-int PT2314::getChannel() {
-	return _channel;
+int PT2314::getChannel()
+{
+	return _channel + 1; // external channel number is one based
 }
 
-int PT2314::getVolume() {
+int PT2314::getVolume()
+{
 	return _volume;
 }
 
-int PT2314::getBass() {
+int PT2314::getBass()
+{
 	return _bass;
 }
 
-int PT2314::getTreble() {
+int PT2314::getTreble()
+{
 	return _treble;
 }
 
-int PT2314::getAttenuationL() {
+int PT2314::getAttenuationL()
+{
 	return _attenuationL;
 }
 
-int PT2314::getAttenuationR() {
+int PT2314::getAttenuationR()
+{
 	return _attenuationR;
 }
 
-int PT2314::getGain() {
+int PT2314::getGain()
+{
 	return _gain;
 }
