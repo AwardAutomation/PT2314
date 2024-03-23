@@ -91,7 +91,7 @@ bool PT2314::init(void)
 	_attenuationR = 100;
 	_mute = false;
 	_loudness = false;
-	_gain = 0;
+	_gain_index = 0;
 	_channel = 0;
 	_bass = 50;
 	_treble = 50;
@@ -198,9 +198,8 @@ bool PT2314::updateAttenuation()
 bool PT2314::gain(int v)
 {
 	// v=0 means no gain, 1=+3.75dB, 2=+7.5dB, 3=+11.25dB
-	v = constrain(v, 0, 3);
-	// gain byte, 0b00011000 = no gain, 0b00010000 = +3.75dB, 0b00001000 = +7.5dB, 0b00000000 = +11.25dB
-	_gain = ((3 - v) << 3);
+	_gain_index = constrain(v, 0, 3);
+	log_d("Gain index: %d (%.2fdB)", _gain_index, getGain());
 	return updateAudioSwitch();
 }
 
@@ -208,15 +207,16 @@ bool PT2314::updateAudioSwitch()
 {
 	int audioByte = 0b01000000; // audio switch + gain +11.25dB.
 	// gain byte, 0b00011000 = no gain, 0b00010000 = +3.75dB, 0b00001000 = +7.5dB, 0b00000000 = +11.25dB
-	audioByte |= _gain;
+	int8_t gain_array[] = {0b00011000, 0b00010000, 0b00001000, 0b00000000};
+	audioByte |= gain_array[_gain_index];
 
 	if (_loudness)
 	{
-		audioByte |= 0x00;
+		audioByte |= 0b00000000;
 	}
 	else
 	{
-		audioByte |= 0x04;
+		audioByte |= 0b00000100;
 	}
 	audioByte |= _channel;
 	return (writeI2CChar(audioByte) == 0) ? true : false;
@@ -279,7 +279,7 @@ float PT2314::getVolumedB()
 	int A = _volume_pt2314 & 0b00000111;															// mask the 3 lsb of volume_pt2314
 	int B = (_volume_pt2314 & 0b00111000) >> 3;												// mask the 3 msb of volume_pt2314 and shift 3 bits to the right
 	float vol_dB = aSteps[A] + bSteps[B];
-	log_d("Volume: %d, A: %d, B: %d, dB: %.2f", _volume_pt2314, A, B, vol_dB);
+	log_d("Volume: %d, A: %d, B: %d, %.2fdB", _volume_pt2314, A, B, vol_dB);
 	return vol_dB;
 }
 
@@ -303,7 +303,10 @@ int PT2314::getAttenuationR()
 	return _attenuationR;
 }
 
-int PT2314::getGain()
+// return the gain in dB
+float PT2314::getGain()
 {
-	return _gain;
+	// gain byte, 0b00011000 = no gain, 0b00010000 = +3.75dB, 0b00001000 = +7.5dB, 0b00000000 = +11.25dB
+	float gain_array_dB[] = {0, 3.75, 7.5, 11.25};
+	return gain_array_dB[_gain_index];
 }

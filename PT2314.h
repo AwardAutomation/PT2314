@@ -44,7 +44,7 @@ private:
 	int _attenuationR;
 	bool _mute;
 	bool _loudness;
-	uint8_t _gain;
+	uint8_t _gain_index;
 	int _channel;
 	bool _channel_is_one_based;
 	int _bass;
@@ -78,7 +78,7 @@ public:
 	int getTreble();
 	int getAttenuationL();
 	int getAttenuationR();
-	int getGain();
+	float getGain();
 };
 
 #endif
