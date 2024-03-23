@@ -39,13 +39,14 @@ class PT2314
 private:
 	static unsigned char eq_table[];
 	int _volume;
-	int volume_pt2314;
+	int _volume_pt2314;
 	int _attenuationL;
 	int _attenuationR;
 	bool _mute;
 	bool _loudness;
 	uint8_t _gain;
 	int _channel;
+	bool _channel_is_one_based;
 	int _bass;
 	int _treble;
 	int volume_to_pt2314(int vol);
@@ -63,7 +64,7 @@ public:
 	bool muteOn(void);
 	bool muteOff(void);
 	bool volume(int v);
-	bool channel(int ch);
+	bool channel(int ch, bool one_based = false);
 	bool loudnessOn();
 	bool loudnessOff();
 	bool gain(int v);
@@ -72,7 +73,7 @@ public:
 	bool treble(int t);
 	int getChannel();
 	int getVolume();
-	int getVolumedB();
+	float getVolumedB();
 	int getBass();
 	int getTreble();
 	int getAttenuationL();

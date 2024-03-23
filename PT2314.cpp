@@ -119,10 +119,12 @@ bool PT2314::muteOff(void)
 	return updateVolume();
 }
 
-bool PT2314::channel(int ch)
+bool PT2314::channel(int ch, bool one_based)
 {
-	int _ch = ch - 1; // internal channel number is zero based
-	_channel = constrain(_ch, 0, 3);
+	_channel_is_one_based = one_based;
+	if (_channel_is_one_based)
+		ch = ch - 1; // internal channel number is zero based
+	_channel = constrain(ch, 0, 3);
 	return updateAudioSwitch();
 }
 
@@ -159,8 +161,8 @@ bool PT2314::treble(int t)
 
 bool PT2314::updateVolume()
 {
-	volume_pt2314 = volume_to_pt2314(_volume);
-	return (writeI2CChar(volume_pt2314) == 0) ? true : false;
+	_volume_pt2314 = volume_to_pt2314(_volume);
+	return (writeI2CChar(_volume_pt2314) == 0) ? true : false;
 }
 
 bool PT2314::updateAttenuation()
@@ -259,7 +261,10 @@ bool PT2314::updateAll()
 
 int PT2314::getChannel()
 {
-	return _channel + 1; // external channel number is one based
+	if (_channel_is_one_based)
+		return _channel + 1; // external channel number is one based
+	else
+		return _channel; // external channel number is one based
 }
 
 int PT2314::getVolume()
@@ -267,14 +272,14 @@ int PT2314::getVolume()
 	return _volume;
 }
 
-int PT2314::getVolumedB()
+float PT2314::getVolumedB()
 {
-	float aSteps[] = { 0, -1.25, -2.5, -3.75, -5, -6.25, -7.5, -8.75 }; // A values in 1.25 dB steps 
-	float bSteps[] = { 0, -10, -20, -30, -40, -50, -60, -70 }; // B values in 10 dB steps
-	int A = volume_pt2314 & 0b00000111; // mask the 3 lsb of volume_pt2314
-	int B = (volume_pt2314 & 0b00111000) >> 3; // mask the 3 msb of volume_pt2314 and shift 3 bits to the right
+	float aSteps[] = {0, -1.25, -2.5, -3.75, -5, -6.25, -7.5, -8.75}; // A values in 1.25 dB steps
+	float bSteps[] = {0, -10, -20, -30, -40, -50, -60, -70};					// B values in 10 dB steps
+	int A = _volume_pt2314 & 0b00000111;															// mask the 3 lsb of volume_pt2314
+	int B = (_volume_pt2314 & 0b00111000) >> 3;												// mask the 3 msb of volume_pt2314 and shift 3 bits to the right
 	float vol_dB = aSteps[A] + bSteps[B];
-	log_d("Volume: %d, A: %d, B: %d, dB: %.2f", volume_pt2314, A, B, vol_dB);
+	log_d("Volume: %d, A: %d, B: %d, dB: %.2f", _volume_pt2314, A, B, vol_dB);
 	return vol_dB;
 }
 
