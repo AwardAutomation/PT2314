@@ -252,3 +252,31 @@ bool PT2314::updateAll()
 
 	return updateTreble();
 }
+
+int PT2314::getChannel() {
+	return _channel;
+}
+
+int PT2314::getVolume() {
+	return _volume;
+}
+
+int PT2314::getBass() {
+	return _bass;
+}
+
+int PT2314::getTreble() {
+	return _treble;
+}
+
+int PT2314::getAttenuationL() {
+	return _attenuationL;
+}
+
+int PT2314::getAttenuationR() {
+	return _attenuationR;
+}
+
+int PT2314::getGain() {
+	return _gain;
+}

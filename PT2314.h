@@ -69,6 +69,13 @@ public:
 	bool attenuation(int l, int r);
 	bool bass(int b);
 	bool treble(int t);
+	int getChannel();
+	int getVolume();
+	int getBass();
+	int getTreble();
+	int getAttenuationL();
+	int getAttenuationR();
+	int getGain();
 };
 
 #endif
