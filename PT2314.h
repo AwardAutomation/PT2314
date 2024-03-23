@@ -14,27 +14,28 @@
  * GNU General Public License for more details.
  *
  * <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-#define  PT2314_I2C_ADDRESS			0x44
+#define PT2314_I2C_ADDRESS 0x44
 
-#define  PT2314_BASS_TONE_CONTROL   0x60 // 0b01100000 
-#define  PT2314_TREBLE_TONE_CONTROL	0x70 // 0b01110000
+#define PT2314_BASS_TONE_CONTROL 0x60		// 0b01100000
+#define PT2314_TREBLE_TONE_CONTROL 0x70 // 0b01110000
 
-#define  PT2314_AUDIO_BYTE			0x58 
-#define  PT2314_AUDIO_BYTE_LOUD_ON	0x00
-#define  PT2314_AUDIO_BYTE_LOAD_OFF 0x04
+#define PT2314_AUDIO_BYTE 0x58
+#define PT2314_AUDIO_BYTE_LOUD_ON 0x00
+#define PT2314_AUDIO_BYTE_LOAD_OFF 0x04
 
-#define  PT2314_SPEAKER_ATTN_L   	0xc0 // 0b11000000
-#define  PT2314_SPEAKER_ATTN_R   	0xe0 // 0b11100000
-#define  PT2314_SPEAKER_ATTN_L_MUTE 0xdf 
-#define  PT2314_SPEAKER_ATTN_R_MUTE 0xff 
+#define PT2314_SPEAKER_ATTN_L 0xc0 // 0b11000000
+#define PT2314_SPEAKER_ATTN_R 0xe0 // 0b11100000
+#define PT2314_SPEAKER_ATTN_L_MUTE 0xdf
+#define PT2314_SPEAKER_ATTN_R_MUTE 0xff
 
 #ifndef PT2314_h
 #define PT2314_h
 
-class PT2314 {
-    
+class PT2314
+{
+
 private:
 	static unsigned char eq_table[];
 	int _volume;
@@ -48,26 +49,26 @@ private:
 	int _treble;
 	int volume_to_pt2314(int vol);
 	int eq_to_pt2314(int val);
-  int writeI2CChar(unsigned char c);
-  bool updateVolume();
+	int writeI2CChar(unsigned char c);
+	bool updateVolume();
 	bool updateAttenuation();
 	bool updateAudioSwitch();
 	bool updateBass();
 	bool updateTreble();
 	bool updateAll();
-    
+
 public:
-    bool init(void);
-    void muteOn(void); 
-    void muteOff(void); 
-    void volume(int v);
+	bool init(void);
+	void muteOn(void);
+	void muteOff(void);
+	void volume(int v);
 	void channel(int ch);
 	void loudnessOn();
 	void loudnessOff();
 	void gain(int v);
-	void attenuation(int l, int r); 
-    void bass(int b); 
-    void treble(int t);
+	void attenuation(int l, int r);
+	void bass(int b);
+	void treble(int t);
 };
 
 #endif
