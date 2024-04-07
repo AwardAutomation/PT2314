@@ -17,6 +17,7 @@
  */
 
 #include <Arduino.h>
+#include <log.h>
 #include <Wire.h>
 #include <PT2314.h>
 
